@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Button, Checkbox, Input, List, ListItem, ListItemText } from '@mui/material';
 
 export default function Main() {
   const [todoList, setTodoList] = useState([]);
@@ -6,33 +7,36 @@ export default function Main() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setTodoList([...todoList, todo]);
+    if (!todo) return;
+    setTodoList((prev) => [...prev, todo]);
     setTodo('');
   };
 
   const completeTodo = (index) => {
-    const newTodoList = todoList.filter((item, i) => i !== index);
-    setTodoList(newTodoList);
+    setTodoList((prev) => prev.filter((item, i) => i !== index));
   };
 
   return (
-    <div className="h-full w-full">
-      <div className="h-5/6 w-full pl-24">
-        {todoList.map((item, index) => (
-          <div key={item} className="h-24 w-full flex justify-start items-center">
-            <input
-              type="checkbox"
-              onClick={() => {
-                completeTodo(index);
-              }}
-            />
-            <span className="mx-5">{item}</span>
-          </div>
-        ))}
+    <div className="h-5/6 w-[48rem] flex flex-col jutify-center items-center">
+      <div className="h-5/6 w-full overflow-y-scroll scrollbar-none pl-10">
+        <List sx={{ width: '80%' }}>
+          {todoList.map((item, index) => (
+            <ListItem key={item} divider className="h-24 w-full flex justify-start items-center">
+              <div className="h-2/3 w-full flex justify-start items-center">
+                <Checkbox
+                  onClick={() => {
+                    completeTodo(index);
+                  }}
+                />
+                <ListItemText id={index} primary={item} />
+              </div>
+            </ListItem>
+          ))}
+        </List>
       </div>
       <div className="h-1/6 w-full">
-        <form onSubmit={handleSubmit} className="h-full w-full flex justify-around items -center">
-          <input
+        <form onSubmit={handleSubmit} className="h-full w-full flex justify-around items-center">
+          <Input
             onChange={(e) => setTodo(e.target.value)}
             value={todo}
             type="text"
@@ -40,11 +44,9 @@ export default function Main() {
             placeholder="Enter your to do"
             className="h-1/3 w-10/12 border border-slate-400 rounded-2xl pl-5 focus:outline-none"
           />
-          <input
-            type="submit"
-            value="확인"
-            className="h-1/3 w-1/12 border border-slate-400 rounded-2xl hover:cursor-pointer hover:bg-slate-400 hover:text-white"
-          />
+          <Button variant="outlined" type="submit" className="h-1/3 w-1/12">
+            확인
+          </Button>
         </form>
       </div>
     </div>
