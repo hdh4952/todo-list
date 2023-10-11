@@ -5,7 +5,7 @@ import { Button, Input, List, ListItem, ListItemText } from '@mui/material';
 import React, { useState } from 'react';
 
 // 컴포넌트 최적화를 위하여 React.memo를 사용합니다
-const TodoItem = React.memo(function TodoItem({ todo, onToggle }) {
+const TodoItem = React.memo(function TodoItem({ todo, onToggle, onDelete }) {
   return (
     <ListItem divider className="h-24 w-full flex justify-start items-center">
       <div className="h-3/5 w-full flex justify-start items-center">
@@ -29,7 +29,7 @@ const TodoItem = React.memo(function TodoItem({ todo, onToggle }) {
             >
               Undone
             </Button>
-            <Button variant="outlined" color="error">
+            <Button onClick={() => onDelete(todo.id)} variant="outlined" color="error">
               Delete
             </Button>
           </>
@@ -40,19 +40,19 @@ const TodoItem = React.memo(function TodoItem({ todo, onToggle }) {
 });
 
 // 컴포넌트 최적화를 위하여 React.memo를 사용합니다
-const TodoList = React.memo(function TodoList({ todos, onToggle }) {
+const TodoList = React.memo(function TodoList({ todos, onToggle, onDelete }) {
   return (
     <div className="h-5/6 w-full flex justify-center items-start overflow-y-scroll pl-10 scrollbar-thin scrollbar-thumb-white scrollbar-track-[#121212]">
       <List sx={{ width: '80%' }}>
         {todos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} onToggle={onToggle} />
+          <TodoItem key={todo.id} todo={todo} onToggle={onToggle} onDelete={onDelete} />
         ))}
       </List>
     </div>
   );
 });
 
-function Todos({ todos, onCreate, onToggle }) {
+function Todos({ todos, onCreate, onToggle, onDelete }) {
   // 리덕스를 사용한다고 해서 모든 상태를 리덕스에서 관리해야하는 것은 아닙니다.
   const [text, setText] = useState('');
   const onChange = (e) => setText(e.target.value);
@@ -64,7 +64,7 @@ function Todos({ todos, onCreate, onToggle }) {
 
   return (
     <div className="h-5/6 w-[48rem] flex flex-col justify-center items-center">
-      <TodoList todos={todos} onToggle={onToggle} />
+      <TodoList todos={todos} onToggle={onToggle} onDelete={onDelete} />
       <div className="h-1/6 w-full">
         <form onSubmit={onSubmit} className="h-full w-full flex justify-around items-center">
           <Input

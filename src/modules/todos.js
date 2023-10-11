@@ -1,5 +1,6 @@
 const ADD_TODO = 'todos/ADD_TODO';
 const TOGGLE_TODO = 'todos/TOGGLE_TODO';
+const DELETE_TODO = 'todos/DELETE_TODO';
 
 let nextId = 0; // todo 데이터에서 사용할 고유 id
 export const addTodo = (text) => {
@@ -19,6 +20,11 @@ export const toggleTodo = (id) => ({
   id,
 });
 
+export const deleteTodo = (id) => ({
+  type: DELETE_TODO,
+  id,
+});
+
 const initialState = []; // 초기 상태 선언
 
 // eslint-disable-next-line default-param-last
@@ -28,6 +34,8 @@ export default function todos(state = initialState, action) {
       return state.concat(action.todo);
     case TOGGLE_TODO:
       return state.map((todo) => (todo.id === action.id ? { ...todo, done: !todo.done } : todo));
+    case DELETE_TODO:
+      return state.filter((todo) => todo.id !== action.id);
     default:
       return state;
   }
